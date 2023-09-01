@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'package:flutter_google_sheet_example/home.dart';
+
 import 'monument_model.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(monuments: fetchMonument()),
+      home: HomeScreen(),
     );
   }
 }

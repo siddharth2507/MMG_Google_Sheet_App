@@ -1,40 +1,71 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class MonumentModel {
-  String imageUrl;
-  String name;
-  String about;
+  /* final int? id;
+  final String? name;
+  final String? surname;
+  final String? bio;
+  final String? email;
 
   MonumentModel({
-    this.about,
+    this.id,
     this.name,
-    this.imageUrl,
+    this.surname,
+    this.bio,
+    this.email,
   });
 
-  factory MonumentModel.fromMap(Map<String, dynamic> json) {
+  factory MonumentModel.fromJson(Map<String, dynamic> json) {
     return MonumentModel(
-      about: json['about'],
+      id: json['Id'],
+      name: json['Name'],
+      surname: json['Surname'],
+      bio: json['Bio'],
+      email: json['Email'],
+    );
+  }*/
+
+  final String? category;
+  final String? name;
+  final int? number;
+  final String? company;
+
+  MonumentModel({
+    this.category,
+    this.name,
+    this.number,
+    this.company,
+  });
+
+  factory MonumentModel.fromJson(Map<String, dynamic> json) {
+    return MonumentModel(
+      category: json['category'],
       name: json['name'],
-      imageUrl: json['imageUrl'],
+      number: json['number'],
+      company: json['company'],
     );
   }
 
-}
+  static List<MonumentModel> decodeMonument(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    print('parsed: $parsed ');
+    return parsed
+        .map<MonumentModel>((json) => MonumentModel.fromJson(json))
+        .toList();
+  }
 
-List<MonumentModel> decodeMonument(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  return parsed
-      .map<MonumentModel>((json) => MonumentModel.fromMap(json))
-      .toList();
-}
-
-Future<List<MonumentModel>> fetchMonument() async {
-  final response = await http.get(
-      'https://script.google.com/macros/s/AKfycbx9kO8lRb2UTMesbih4M4-EwlFxW7Zt58IMmHtFNGrG6bMF-eLlUCwvHuo9GdaAhPy-/exec');
-  if (response.statusCode == 200) {
-    return decodeMonument(response.body);
-  } else {
-    throw Exception('Unable to fetch data from the REST API');
+  static Future<List<MonumentModel>> fetchMonument() async {
+    var url = Uri.parse(
+        // 'https://script.google.com/macros/s/AKfycbzMQGxpBP2B6C7uHEGLTVZtylHFjDABuRIQixRMaFRRO6-4C-MOCjxRAsjp3yyHjhpl/exec');
+        'https://script.google.com/macros/s/AKfycbyOxoO6G7u9-OgkAgwytAeGV0u0z9EwF1XvkRsw8dbLRCDPyX44z1_NQ4h9-tUlEkbPHg/exec');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      print('response: ${response.body}');
+      return decodeMonument(response.body);
+    } else {
+      throw Exception('Unable to fetch data from the REST API');
+    }
   }
 }
